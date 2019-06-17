@@ -1,0 +1,62 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>cn.rainss</groupId>
+	<artifactId>springcloud-02-shopping</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<packaging>pom</packaging>
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<maven.compiler.target>1.8</maven.compiler.target>
+	</properties>
+	<!-- 用于管理当前项目与所有子项目中jar文件的版本 -->
+	<dependencyManagement>
+		<dependencies>
+			<!-- 导入springCloud的依赖 -->
+			<dependency>
+				<groupId>org.springframework.cloud</groupId>
+				<artifactId>spring-cloud-dependencies</artifactId>
+				<version>Finchley.SR2</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+			<!-- 导入springboot依赖 -->
+			<dependency>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-dependencies</artifactId>
+				<version>2.0.6.RELEASE</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+			<!-- 导入mysql的依赖 -->
+			<dependency>
+				<groupId>mysql</groupId>
+				<artifactId>mysql-connector-java</artifactId>
+				<version>5.1.47</version>
+			</dependency>
+			<!-- 导入Druid数据库连接池，是阿里开源平台数据库连接池的实例 -->
+			<dependency>
+				<groupId>com.alibaba</groupId>
+				<artifactId>druid</artifactId>
+				<version>1.1.16</version>
+			</dependency>
+			<!-- 导入mybatis的依赖 -->
+			<dependency>
+				<groupId>org.mybatis.spring.boot</groupId>
+				<artifactId>mybatis-spring-boot-starter</artifactId>
+				<version>2.0.1</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+	<modules>
+		<module>springcloud-02-common</module>
+		<module>springcloud-02-fileserver</module>
+		<module>springcloud-02-shopping-user-provider</module>
+		<module>springcloud-02-shopping-goods-provider</module>
+		<module>springcloud-02-shopping-orders-provider</module>
+		<module>springcloud-02-shopping-eureka-server</module>
+		<module>springcloud-02-shopping-zuul</module>
+	</modules>
+</project>
