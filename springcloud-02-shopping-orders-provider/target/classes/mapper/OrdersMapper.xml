@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.springcloud.dao.OrdersMapper">
+	<resultMap id="BaseResultMap"
+		type="com.springcloud.entity.Orders">
+		<id column="order_id" jdbcType="INTEGER" property="orderId" />
+		<result column="user_id" jdbcType="INTEGER" property="userId" />
+		<result column="consignee_name" jdbcType="VARCHAR"
+			property="consigneeName" />
+		<result column="consignee_number" jdbcType="CHAR"
+			property="consigneeNumber" />
+		<result column="consignee_site" jdbcType="VARCHAR"
+			property="consigneeSite" />
+		<result column="order_time" jdbcType="TIMESTAMP"
+			property="orderTime" />
+		<result column="order_amount" jdbcType="DOUBLE"
+			property="orderAmount" />
+		<result column="order_status" jdbcType="INTEGER"
+			property="orderStatus" />
+	</resultMap>
+	<delete id="deleteByPrimaryKey"
+		parameterType="java.lang.Integer">
+		delete from orders
+		where order_id =
+		#{orderId,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert"
+		parameterType="com.springcloud.entity.Orders">
+		insert into orders (order_id, user_id, consignee_name,
+		consignee_number, consignee_site, order_time,
+		order_amount,
+		order_status)
+		values (#{orderId,jdbcType=INTEGER},
+		#{userId,jdbcType=INTEGER},
+		#{consigneeName,jdbcType=VARCHAR},
+		#{consigneeNumber,jdbcType=CHAR}, #{consigneeSite,jdbcType=VARCHAR},
+		#{orderTime,jdbcType=TIMESTAMP},
+		#{orderAmount,jdbcType=DOUBLE},
+		#{orderStatus,jdbcType=INTEGER})
+	</insert>
+	<update id="updateByPrimaryKey"
+		parameterType="com.springcloud.entity.Orders">
+		update orders
+		set user_id = #{userId,jdbcType=INTEGER},
+		consignee_name = #{consigneeName,jdbcType=VARCHAR},
+		consignee_number =
+		#{consigneeNumber,jdbcType=CHAR},
+		consignee_site =
+		#{consigneeSite,jdbcType=VARCHAR},
+		order_time =
+		#{orderTime,jdbcType=TIMESTAMP},
+		order_amount =
+		#{orderAmount,jdbcType=DOUBLE},
+		order_status =
+		#{orderStatus,jdbcType=INTEGER}
+		where order_id =
+		#{orderId,jdbcType=INTEGER}
+	</update>
+	<select id="selectByPrimaryKey"
+		parameterType="java.lang.Integer" resultMap="BaseResultMap">
+		select order_id, user_id,
+		consignee_name, consignee_number, consignee_site,
+		order_time,
+		order_amount, order_status
+		from orders
+		where order_id =
+		#{orderId,jdbcType=INTEGER}
+	</select>
+	<select id="selectAll" resultMap="BaseResultMap">
+		select order_id, user_id,
+		consignee_name, consignee_number, consignee_site,
+		order_time,
+		order_amount, order_status
+		from orders
+	</select>
+	<!-- 查询orders表中满足条件的订单信息 -->
+	<select id="selectOrders"
+		parameterType="com.springcloud.entity.Orders"
+		resultMap="OrdersResultMap">
+		select o.order_id, o.user_id, o.consignee_name, o.consignee_number,
+		o.consignee_site,
+		o.order_time,
+		o.order_amount,
+		o.order_status,u.user_name,u.user_phone
+		from users as u join orders o
+		on u.user_id=o.user_id
+		<trim prefix="where" prefixOverrides="and|or">
+			<if
+				test="user!=null and user.userName!='%%' and user.userName!='null'">
+				u.user_name like #{user.userName}
+			</if>
+			<if test="orderDateMin!=null and orderDateMax!=null">
+				and o.order_time between #{orderDateMin} and
+				#{orderDateMax}
+			</if>
+			<if test="orderStatus!=-1">
+				and o.order_status=#{orderStatus}
+			</if>
+
+		</trim>
+	</select>
+
+	<update id="updateOrdersStatus"
+		parameterType="com.springcloud.entity.Orders">
+		update orders set order_status =
+		#{orderStatus,jdbcType=INTEGER} where order_id =
+		#{orderId,jdbcType=INTEGER}
+	</update>
+
+	<!-- 将select语句中的查询结果存入对于的属性中 -->
+	<resultMap type="com.springcloud.entity.Orders"
+		id="OrdersResultMap">
+		<id column="order_id" property="orderId" />
+		<result column="consignee_name" property="consigneeName" />
+		<result column="consignee_number" property="consigneeNumber" />
+		<result column="consignee_site" property="consigneeSite" />
+		<result column="order_time" property="orderTime" />
+		<result column="order_status" property="orderStatus" />
+		<result column="order_amount" property="orderAmount" />
+		<association property="user"
+			javaType="com.springcloud.entity.Users">
+			<id column="user_id" property="userId" />
+			<result column="user_name" property="userName" />
+			<result column="user_phone" property="userPhone" />
+		</association>
+	</resultMap>
+	<select id="selectGroup" parameterType="com.springcloud.entity.Orders" resultMap="orderGroupMap">
+		select
+		date_format(o.order_time,'%Y-%m') order_month,sum(od.transaction_count*od.transaction_price) order_price
+		from orders o join order_detail od on o.order_id = od.order_id where
+		date_format(o.order_time,'%Y-%m') between #{startMonth} and #{endMonth}
+		group by date_format(o.order_time,'%Y-%m')
+		order by 1 asc
+	</select>
+	<resultMap type="com.springcloud.entity.Orders" id="orderGroupMap">
+		<result column="order_month" property="orderMonth"/>
+		<result column="order_price" property="orderPrice"/>
+	</resultMap>
+</mapper>
