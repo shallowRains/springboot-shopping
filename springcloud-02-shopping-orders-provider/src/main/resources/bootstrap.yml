@@ -3,8 +3,13 @@ eureka:
     service-url:
       defaultZone: http://localhost:9000/eureka/
 #配置Config Server的信息
-spring:  cloud:    config:      discovery:        enabled: true               # 在Config Server中查找内容
+spring:
+  cloud:
+    config:
+      discovery:
+        enabled: true               # 在Config Server中查找内容
         service-id: config-server   # 设置Config Server应用的命名成
       name: common-config           # 设置远程库配置文件的前缀
       profile: dev                  # 设置环境，可以省略
       #label: master                # 设置远程仓库的分支，默认为master
+      fddf
