@@ -64,4 +64,17 @@ public interface UsersService {
 	 * @return 成功返回大于0的数，失败返回0
 	 */
 	public abstract Integer updateMessage(Users users);
+	/**
+	 * 查询users表中指定用户名出现的次数
+	 * @param userName 用户名
+	 * @return 返回用户名在users表中出现的次数
+	 */
+	public abstract Long countByUserName(String userName);
+	
+	/**
+	 * 用户登录方法
+	 * @param users 用户信息
+	 * @return
+	 */
+	public abstract Users userLogin(Users users);
 }

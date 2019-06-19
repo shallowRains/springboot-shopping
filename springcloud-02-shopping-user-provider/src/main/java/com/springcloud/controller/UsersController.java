@@ -190,4 +190,44 @@ public class UsersController {
 
 	}
 
+	@RequestMapping(value = "/countByUserName")
+	public ResultValue countByUserName(@RequestParam("userName") String userName) {
+		ResultValue rv = new ResultValue();
+		try {
+			Long countByUserName = this.usersService.countByUserName(userName);
+
+			rv.setCode(0);
+			Map<String, Object> map = new HashMap<>();
+			map.put("count", countByUserName);
+			rv.setDataMap(map);
+			return rv;
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		rv.setCode(1);
+		rv.setMessage("服务器正忙，请稍后再试！");
+		return rv;
+	}
+	
+	@RequestMapping(value = "/userLogin")
+	public ResultValue userLogin(Users users) {
+		ResultValue rv = new ResultValue();
+		try {
+			Users login = this.usersService.userLogin(users);
+			if(login!=null) {
+				rv.setCode(0);
+				Map<String,Object> map = new HashMap<>();
+				map.put("userMessage",login);
+				rv.setDataMap(map);
+				return rv;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		rv.setCode(1);
+		rv.setMessage("登录失败！");
+		return rv;
+	}
+
 }

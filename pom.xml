@@ -58,5 +58,6 @@
 		<module>springcloud-02-shopping-orders-provider</module>
 		<module>springcloud-02-shopping-eureka-server</module>
 		<module>springcloud-02-shopping-zuul</module>
+		<module>springcloud-02-shopping-config-server</module>
 	</modules>
 </project>

@@ -29,4 +29,9 @@ public class TypeServiceImpl implements TypeService {
 		return this.class2Mapper.selectByClass1Id(typeOneId);
 	}
 
+	@Override
+	public List<Class2> selectAllTypeTwo() {
+		return this.class2Mapper.selectAll();
+	}
+
 }

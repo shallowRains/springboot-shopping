@@ -31,9 +31,11 @@ public class TypeController {
 		try {
 			
 			List<Class1> selectAllTypeOne = this.typeService.selectAllTypeOne();
+			List<Class2> selectAllTypeTwo = this.typeService.selectAllTypeTwo();
 			if(selectAllTypeOne != null && selectAllTypeOne.size()>0) {
 				Map<String,Object> hashMap = new HashMap<>();
 				hashMap.put("TypeOneList", selectAllTypeOne);
+				hashMap.put("TypeTwoList",selectAllTypeTwo);
 				rv.setCode(0);
 				rv.setDataMap(hashMap);
 				return rv;

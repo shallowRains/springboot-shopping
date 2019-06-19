@@ -21,4 +21,9 @@ public interface TypeService {
 	 * @return 成功返回java.util.List类型实例，否则返回 null
 	 */
 	public abstract List<Class2> selectTypeTwoByTypeOneId(Integer typeOneId);
+	/**
+	 * 查询所有的二级类别的商品分类信息
+	 * @return 成功返回java.util.List<Class2>类型的实例
+	 */
+	public abstract List<Class2> selectAllTypeTwo();
 }
