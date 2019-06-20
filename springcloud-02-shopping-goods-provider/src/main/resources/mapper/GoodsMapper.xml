@@ -157,12 +157,28 @@
 		where goods_id=#{goodsId}
 	</update>
 	<select id="selectGroup" resultMap="goodsGroupMap">
-		select g.goods_name,sum(o.transaction_count) count
-		from goods g join order_detail o on g.goods_id = o.goods_id group by
-		g.goods_id order by 2 desc limit 0,10
+		select
+		g.goods_name,sum(o.transaction_count) count
+		from goods g join
+		order_detail o on g.goods_id = o.goods_id group by
+		g.goods_id order by
+		2 desc limit 0,10
 	</select>
-	<resultMap type="com.springcloud.entity.Goods" id="goodsGroupMap">
-		<result column="goods_name" property="goodsName"/>
-		<result column="count" property="goodsSum"/>
+	<select id="selectGoodsHot"
+		resultMap="BaseResultMap">
+		select
+		goods_id,goods_name,goods_prices,goods_discount,goods_status,goods_count,goods_is_new,goods_is_hot,goods_level,goods_brief,goods_details,goods_photo,class2_id
+		from goods where goods_is_hot = 0 order by goods_id asc limit 0,5
+	</select>
+	<select id="selectGoodsNew"
+		resultMap="BaseResultMap">
+		select
+		goods_id,goods_name,goods_prices,goods_discount,goods_status,goods_count,goods_is_new,goods_is_hot,goods_level,goods_brief,goods_details,goods_photo,class2_id
+		from goods where goods_is_new = 0 order by goods_id desc limit 0,5
+	</select>
+	<resultMap type="com.springcloud.entity.Goods"
+		id="goodsGroupMap">
+		<result column="goods_name" property="goodsName" />
+		<result column="count" property="goodsSum" />
 	</resultMap>
 </mapper>

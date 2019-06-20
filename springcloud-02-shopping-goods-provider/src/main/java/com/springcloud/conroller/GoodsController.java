@@ -131,4 +131,28 @@ public class GoodsController {
 		resultValue.setCode(1);
 		return resultValue;
 	}
+	/**
+	 * 获得index页面的初始化商品信息（目前仅仅有商品热卖以及商品是否是新品两组信息）
+	 * @return
+	 */
+	@RequestMapping(value = "/indexGoodsMessage")
+	public ResultValue selectGoodsHot() {
+		ResultValue resultValue = new ResultValue();
+		try {
+			List<Goods> selectGoodsHot = this.goodsService.selectGoodsHot();
+			List<Goods> selectGoodsNew = this.goodsService.selectGoodsNew();
+			if(selectGoodsHot != null && selectGoodsNew!=null && selectGoodsHot.size() > 0 && selectGoodsNew.size() > 0) {
+				resultValue.setCode(0);
+				Map<String,Object> map = new HashMap<>();
+				map.put("goodsHotList", selectGoodsHot);
+				map.put("goodsNewList", selectGoodsNew);
+				resultValue.setDataMap(map);
+				return resultValue;
+			}
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+		resultValue.setCode(1);
+		return resultValue;
+	}
 }
