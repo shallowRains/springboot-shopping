@@ -3,6 +3,30 @@ server:
 
 spring:  application:
     name: orders-provider
+  datasource:                                     # 设置数据源信息
+    type: com.alibaba.druid.pool.DruidDataSource  # 设置数据库连接池的类型
+    driver-class-name: org.gjt.mm.mysql.Driver    # 设置数据数据库驱动
+    url: jdbc:mysql://127.0.0.1:3306/rains?characterEncoding=utf8&useSSL=true&serverTimezone=UTC
+    username: root
+    password: root
+    dbcp2:
+      min-idle: 5                                 # 设置最小连接数
+      initial-size: 5                             # 设置当前数据库连接池启动时，创建的连接数
+      max-total: 10                               # 设置最大的连接数
+      max-wait-millis: 2000                       # 设置最大等待时间
+mybatis: 
+  mapper-locations:
+  - classpath:mapper/*.xml                        # 设置Mybatis的mapper文件的位置
+  type-aliases-package: com.springcloud.entity    # 设置实体类的位置
+  configuration:
+    map-underscore-to-camel-case: true            # 开启Mybatis驼峰命名规则
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl # 开启执行的sql语句显示
+ 
+pagehelper:
+  helper-dialect: mysql                           # 设置数据库
+  reasonable: true                                # 设置分页合理化参数
+  support-methods-arguments: true
+
 
 eureka:
   client:
