@@ -1,7 +1,10 @@
 server:
   port: 8003
 
-spring:  application:
+spring:
+  redis:    host: 127.0.0.1
+    port: 6379
+    timeout: 20000  application:
     name: orders-provider
   datasource:                                     # 设置数据源信息
     type: com.alibaba.druid.pool.DruidDataSource  # 设置数据库连接池的类型

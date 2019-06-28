@@ -24,16 +24,19 @@
 		where order_id =
 		#{orderId,jdbcType=INTEGER}
 	</delete>
-	<insert id="insert"
-		parameterType="com.springcloud.entity.Orders">
-		insert into orders (order_id, user_id, consignee_name,
+	<!-- useGeneratedKeys="true"表示使用useGeneratedKeys()方法获得自增长主键的值 -->
+	<!-- keyProperty="orderId" 表示获取到自增长主键的值，将值存放到属性orderId中 -->
+	<insert id="insert" useGeneratedKeys="true"
+		keyProperty="orderId" parameterType="com.springcloud.entity.Orders">
+		insert into orders (user_id,
+		consignee_name,
 		consignee_number, consignee_site, order_time,
 		order_amount,
 		order_status)
-		values (#{orderId,jdbcType=INTEGER},
-		#{userId,jdbcType=INTEGER},
+		values (#{userId,jdbcType=INTEGER},
 		#{consigneeName,jdbcType=VARCHAR},
-		#{consigneeNumber,jdbcType=CHAR}, #{consigneeSite,jdbcType=VARCHAR},
+		#{consigneeNumber,jdbcType=CHAR},
+		#{consigneeSite,jdbcType=VARCHAR},
 		#{orderTime,jdbcType=TIMESTAMP},
 		#{orderAmount,jdbcType=DOUBLE},
 		#{orderStatus,jdbcType=INTEGER})
@@ -124,16 +127,57 @@
 			<result column="user_phone" property="userPhone" />
 		</association>
 	</resultMap>
-	<select id="selectGroup" parameterType="com.springcloud.entity.Orders" resultMap="orderGroupMap">
+	<select id="selectGroup"
+		parameterType="com.springcloud.entity.Orders"
+		resultMap="orderGroupMap">
 		select
-		date_format(o.order_time,'%Y-%m') order_month,sum(od.transaction_count*od.transaction_price) order_price
+		date_format(o.order_time,'%Y-%m')
+		order_month,sum(od.transaction_count*od.transaction_price) order_price
 		from orders o join order_detail od on o.order_id = od.order_id where
-		date_format(o.order_time,'%Y-%m') between #{startMonth} and #{endMonth}
+		date_format(o.order_time,'%Y-%m') between #{startMonth} and
+		#{endMonth}
 		group by date_format(o.order_time,'%Y-%m')
 		order by 1 asc
 	</select>
-	<resultMap type="com.springcloud.entity.Orders" id="orderGroupMap">
-		<result column="order_month" property="orderMonth"/>
-		<result column="order_price" property="orderPrice"/>
+	<select id="selectByUserId" parameterType="java.lang.Integer"
+		resultMap="OrderResultMap">
+		select order_id, user_id,
+		consignee_name, consignee_number,
+		consignee_site,
+		order_time,
+		order_amount, order_status
+		from orders where
+		user_id=#{userId,jdbcType=INTEGER}
+	</select>
+	<select id="selectOrderDetailsByOrderId" parameterType="java.lang.Integer" resultType="com.springcloud.entity.OrderDetail">
+		select order_detail_id,
+		order_id, goods_id, goods_name, transaction_price,
+		transaction_count
+		from order_detail where order_id=#{orderId,jdbcType=INTEGER}
+	</select>
+	<resultMap type="com.springcloud.entity.Orders"
+		id="orderGroupMap">
+		<result column="order_month" property="orderMonth" />
+		<result column="order_price" property="orderPrice" />
+	</resultMap>
+	<resultMap id="OrderResultMap"
+		type="com.springcloud.entity.Orders">
+		<id column="order_id" jdbcType="INTEGER" property="orderId" />
+		<result column="user_id" jdbcType="INTEGER" property="userId" />
+		<result column="consignee_name" jdbcType="VARCHAR"
+			property="consigneeName" />
+		<result column="consignee_number" jdbcType="CHAR"
+			property="consigneeNumber" />
+		<result column="consignee_site" jdbcType="VARCHAR"
+			property="consigneeSite" />
+		<result column="order_time" jdbcType="TIMESTAMP"
+			property="orderTime" />
+		<result column="order_amount" jdbcType="DOUBLE"
+			property="orderAmount" />
+		<result column="order_status" jdbcType="INTEGER"
+			property="orderStatus" />
+		<!-- 封装当前订单明细的集合 -->
+		<collection property="orderDetailsList" select="selectOrderDetailsByOrderId" column="order_id">
+		</collection>
 	</resultMap>
 </mapper>

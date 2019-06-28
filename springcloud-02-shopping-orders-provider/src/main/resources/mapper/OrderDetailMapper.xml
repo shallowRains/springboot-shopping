@@ -17,14 +17,16 @@
 	<delete id="deleteByPrimaryKey"
 		parameterType="java.lang.Integer">
 		delete from order_detail
-		where order_detail_id = #{orderDetailId,jdbcType=INTEGER}
+		where order_detail_id =
+		#{orderDetailId,jdbcType=INTEGER}
 	</delete>
 	<insert id="insert"
 		parameterType="com.springcloud.entity.OrderDetail">
-		insert into order_detail (order_detail_id, order_id, goods_id,
+		insert into order_detail (order_id, goods_id,
 		goods_name, transaction_price, transaction_count
 		)
-		values (#{orderDetailId,jdbcType=INTEGER}, #{orderId,jdbcType=INTEGER},
+		values
+		(#{orderId,jdbcType=INTEGER},
 		#{goodsId,jdbcType=INTEGER},
 		#{goodsName,jdbcType=VARCHAR}, #{transactionPrice,jdbcType=DOUBLE},
 		#{transactionCount,jdbcType=INTEGER}
@@ -33,27 +35,52 @@
 	<update id="updateByPrimaryKey"
 		parameterType="com.springcloud.entity.OrderDetail">
 		update order_detail
-		set order_id = #{orderId,jdbcType=INTEGER},
+		set order_id =
+		#{orderId,jdbcType=INTEGER},
 		goods_id = #{goodsId,jdbcType=INTEGER},
 		goods_name = #{goodsName,jdbcType=VARCHAR},
-		transaction_price = #{transactionPrice,jdbcType=DOUBLE},
-		transaction_count = #{transactionCount,jdbcType=INTEGER}
-		where order_detail_id = #{orderDetailId,jdbcType=INTEGER}
+		transaction_price =
+		#{transactionPrice,jdbcType=DOUBLE},
+		transaction_count =
+		#{transactionCount,jdbcType=INTEGER}
+		where order_detail_id =
+		#{orderDetailId,jdbcType=INTEGER}
 	</update>
 	<select id="selectByPrimaryKey"
 		parameterType="java.lang.Integer" resultMap="BaseResultMap">
-		select order_detail_id, order_id, goods_id, goods_name, transaction_price,
+		select order_detail_id,
+		order_id, goods_id, goods_name, transaction_price,
 		transaction_count
 		from order_detail
-		where order_detail_id = #{orderDetailId,jdbcType=INTEGER}
+		where order_detail_id =
+		#{orderDetailId,jdbcType=INTEGER}
 	</select>
 	<select id="selectAll" resultMap="BaseResultMap">
-		select order_detail_id, order_id, goods_id, goods_name, transaction_price,
+		select order_detail_id,
+		order_id, goods_id, goods_name, transaction_price,
 		transaction_count
 		from order_detail
 	</select>
-	<select id="selectByOrderId" parameterType="java.lang.Integer"  resultMap="BaseResultMap">
-		select order_detail_id,order_id,goods_id,goods_name,transaction_price,transaction_count
+	<select id="selectByOrderId" parameterType="java.lang.Integer"
+		resultMap="BaseResultMap">
+		select
+		order_detail_id,order_id,goods_id,goods_name,transaction_price,transaction_count
 		from order_detail where order_id = #{orderId,jdbcType=INTEGER}
 	</select>
+	<insert id="insertOrderDetails"
+		parameterType="com.springcloud.entity.Orders">
+		insert into order_detail (order_id, goods_id,
+		goods_name,
+		transaction_price, transaction_count
+		)
+		values
+		<!-- collection：表示需要遍历的集合名称 -->
+		<foreach collection="orderDetailsList" item="orderDetails"
+			separator=",">
+			(#{orderId,jdbcType=INTEGER},
+			#{orderDetails.goodsId,jdbcType=INTEGER},
+			#{orderDetails.goodsName,jdbcType=VARCHAR}, #{orderDetails.transactionPrice,jdbcType=DOUBLE},
+			#{orderDetails.transactionCount,jdbcType=INTEGER})
+		</foreach>
+	</insert>
 </mapper>

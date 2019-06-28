@@ -104,4 +104,9 @@ public class UsersServiceImpl implements UsersService {
 		return this.usersRepository.findByUserNameAndUserPasswordAndUserStatusAndJdictionId(users.getUserName(),users.getUserPassword(),users.getUserStatus(),users.getJdictionId());
 	}
 
+	@Override
+	public Users selectById(Users users) {
+		return this.usersRepository.getOne(users.getUserId());
+	}
+
 }

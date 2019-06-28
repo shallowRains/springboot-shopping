@@ -77,4 +77,10 @@ public interface UsersService {
 	 * @return
 	 */
 	public abstract Users userLogin(Users users);
+	/**
+	 * 查询指定用户编号的用户信息
+	 * @param user 用户信息
+	 * @return
+	 */
+	public abstract Users selectById(Users users);
 }

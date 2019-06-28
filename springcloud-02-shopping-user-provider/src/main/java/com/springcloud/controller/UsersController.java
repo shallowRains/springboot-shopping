@@ -4,8 +4,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.mail.internet.MimeMessage;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.data.domain.Page;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -26,7 +31,8 @@ import com.springcloud.vo.ResultValue;
 public class UsersController {
 	@Autowired
 	private UsersService usersService;
-
+	@Autowired
+	private JavaMailSender javaMailSender;
 	/**
 	 * 用户登录
 	 * 
@@ -229,5 +235,37 @@ public class UsersController {
 		rv.setMessage("登录失败！");
 		return rv;
 	}
-
+	@RequestMapping(value = "/selectEmail")
+	public ResultValue selectEmail(Users users) {
+		ResultValue rv = new ResultValue();
+		try {
+			//获得用户信息
+			Users selectById = this.usersService.selectById(users);
+			String userEmail = selectById.getUserEmail();
+			MimeMessage message = this.javaMailSender.createMimeMessage();
+			MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(message,true);
+			//设置发送邮件的邮箱
+			mimeMessageHelper.setFrom("rainerosion@126.com");
+			//设置收件人
+			mimeMessageHelper.setTo(userEmail);
+			//设置邮件主题
+			mimeMessageHelper.setSubject("重置密码");
+			StringBuilder emailMsg = new StringBuilder();
+			emailMsg.append("<p>"+selectById.getUserName()+",您好：</p>");
+			emailMsg.append("<p>&nbsp;&nbsp;&nbsp;&nbsp;请点击此URL重置您的密码：");
+			emailMsg.append("<a href=\"http://127.0.0.1:8848/m/resetPassword.html\">http://127.0.0.1:8848/m/resetPassword.html</a></p>");
+			mimeMessageHelper.setText(emailMsg.toString(),true);
+			//发送附件
+			//FileSystemResource file = new FileSystemResource("d:/b.jpg");
+			//mimeMessageHelper.addAttachment("测试附件.jpg", file);
+			this.javaMailSender.send(message);
+			rv.setCode(0);
+			return rv;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		rv.setCode(1);
+		rv.setMessage("你的邮箱不正确，请与管理员联系！");
+		return rv;
+	}
 }

@@ -14,4 +14,13 @@ spring:
       max-total: 10                               # 设置最大的连接数
       max-wait-millis: 2000                       # 设置最大等待时间
   jpa:    show-sql: true  application:    name: user-provider
+  mail:    host: smtp.126.com
+    username: rainerosion@126.com
+    password: LM1782832653
+    default-encoding: utf-8
+    properties:      mail: 
+        smtp: 
+          auth: true
+          ssl:
+            enable: true
 eureka:  client:    service-url:      defaultZone: http://localhost:9000/eureka/

@@ -12,5 +12,4 @@ public class SpringCloudGoodsProvider {
 	public static void main(String[] args) throws Exception {
 		SpringApplication.run(SpringCloudGoodsProvider.class, args);
 	}
-
 }

@@ -90,5 +90,5 @@ public interface UsersRepository extends JpaRepository<Users, Integer>, JpaSpeci
 	 * @return 成功返回com.springcloud.entity.Users类型的实例
 	 */
 	public abstract Users findByUserNameAndUserPasswordAndUserStatusAndJdictionId(String userName,String userPassword,Integer userStatus,Integer jdictionId);
-	
+
 }

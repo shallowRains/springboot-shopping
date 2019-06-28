@@ -20,6 +20,12 @@ import com.springcloud.vo.ResultValue;
 public class OrderDetailsController {
 	@Autowired
 	private OrderDetailService orderDetailService;
+	/**
+	 * 通过订单编号查询订单详细信息
+	 * @param orderId 订单编号
+	 * @param pageNumber 页码
+	 * @return
+	 */
 	@RequestMapping(value = "/selectByOrderId")
 	public ResultValue selectByOrderId(@RequestParam("orderId") Integer orderId, @RequestParam("pageNumber") Integer pageNumber) {
 		ResultValue resultValue = new ResultValue();
@@ -45,5 +51,75 @@ public class OrderDetailsController {
 		resultValue.setCode(1);
 		resultValue.setMessage("订单详细信息获取失败");
 		return resultValue;
+	}
+	/**
+	 * 为指定编号的用户的购物车添加商品订单详细信息
+	 * @param userId 用户编号
+	 * @param orderDetail 订单明细
+	 * @return
+	 */
+	@RequestMapping(value = "/addShopping")
+	public ResultValue addShopping(@RequestParam("userId") Integer userId,OrderDetail orderDetail) {
+		ResultValue rv = new ResultValue();
+		try {
+			boolean addShopping = this.orderDetailService.addShopping(userId, orderDetail);
+			
+			if(addShopping) {
+				rv.setCode(0);
+				rv.setMessage("购物车添加成功！");
+				return rv;
+			}
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+		rv.setCode(1);
+		rv.setMessage("添加购物车失败！");
+		return rv;
+		
+	}
+	/**
+	 * 获得指定编号的用户的购物车
+	 * @param userId 用户编号
+	 * @return
+	 */
+	@RequestMapping(value = "/selectShopping")
+	public ResultValue selectShopping(@RequestParam("userId") Integer userId) {
+		ResultValue rv = new ResultValue();
+		try {
+			List<OrderDetail> list = this.orderDetailService.selectShopping(userId);
+			if(list != null) {
+				rv.setCode(0);
+				Map<String, Object> map = new HashMap<>();
+				map.put("shoppingList", list);
+				rv.setDataMap(map);
+				return rv;
+			}
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return rv;
+	}
+	/**
+	 * 移除购物车
+	 * @param userId
+	 * @param orderDetail
+	 * @return
+	 */
+	@RequestMapping(value = "/removeshopping")
+	public ResultValue removeShopping(@RequestParam("userId") Integer userId,OrderDetail orderDetail) {
+		ResultValue rv = new ResultValue();
+		try {
+			boolean removeShopping = this.orderDetailService.removeShopping(userId, orderDetail);
+			if(removeShopping) {
+				rv.setCode(0);
+				return rv;
+			}
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+		rv.setCode(1);
+		rv.setMessage("移除购物车商品信息失败！");
+		return rv;
 	}
 }

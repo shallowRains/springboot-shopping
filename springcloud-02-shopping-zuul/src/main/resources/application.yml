@@ -9,4 +9,7 @@ zuul:  routes:    user:
       service-id: goods-provider
       path: /goods/**    orders:
       service-id: orders-provider
-      path: /orders/** 
+      path: /orders/**
+  host:
+    connect-timeout-millis: 15000
+    socket-timeout-millis: 60000

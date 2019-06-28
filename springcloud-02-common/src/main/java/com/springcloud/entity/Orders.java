@@ -1,6 +1,7 @@
 package com.springcloud.entity;
 
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -28,6 +29,10 @@ public class Orders implements java.io.Serializable {
 	 * 当前订单的用户信息
 	 */
 	private Users user;
+	/**
+	 * 用户编号
+	 */
+	private Integer userId;
 	/**
 	 * 收货人姓名,如果省略默认为用户表中的用户姓名
 	 */
@@ -80,4 +85,8 @@ public class Orders implements java.io.Serializable {
 	 * 查询结果 订单的查询结果年月
 	 */
 	private String orderMonth;
+	/**
+	 * 订单明细列表
+	 */
+	private List<OrderDetail> orderDetailsList;
 }
